@@ -81,6 +81,26 @@
                         android:layout_marginRight="16dp"
                         android:layout_marginTop="5dp"
                         android:text="Descricao"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Local do Evento"
+                        android:textSize="50px"
+                        android:textStyle="bold" />
+
+                    <fragment
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/map"
+                        tools:context=".view.DetailEventActivity"
+                        android:name="com.google.android.gms.maps.SupportMapFragment" />
                 </LinearLayout>
 
 

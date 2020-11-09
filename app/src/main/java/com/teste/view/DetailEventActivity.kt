@@ -21,6 +21,12 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.teste.R
 import com.teste.controller.network.NetworkUtils
 import com.teste.controller.service.EventoEndpoint
@@ -39,10 +45,15 @@ import java.time.LocalDate
 import java.util.*
 import javax.sql.DataSource
 
-class DetailEventActivity : AppCompatActivity() {
+class DetailEventActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("SimpleDateFormat")
     val formatDate = SimpleDateFormat("dd/MM/yyyy HH:mm ")
+
+    private lateinit var mMap: GoogleMap
+    private var lat: Double = 0.0
+    private var long: Double = 0.0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +64,10 @@ class DetailEventActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
+
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
         var idEvento = intent.getIntExtra("idEvento", -1)
 
@@ -157,6 +172,8 @@ class DetailEventActivity : AppCompatActivity() {
 
                 val evento = response.body()!!
 
+                lat = evento.latitude
+                long = evento.longitude
                 Glide.with(applicationContext)
                     .load(evento.image)
                     .error(R.drawable.not_found)
@@ -198,5 +215,17 @@ class DetailEventActivity : AppCompatActivity() {
         }
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        if (googleMap != null) {
+            mMap = googleMap
+
+            val loc = LatLng(lat, long)
+            mMap.addMarker(MarkerOptions()
+                .position(loc)
+                .title("Loal do Evento"))
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 20.0f))
+        }
     }
 }
